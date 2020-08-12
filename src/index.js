@@ -12,28 +12,30 @@ class CountdownTimer {
     this.hoursEl = this.timerElement.querySelector('[data-value="hours"]');
     this.minsEl = this.timerElement.querySelector('[data-value="mins"]');
     this.secsEl = this.timerElement.querySelector('[data-value="secs"]');
-
+    this.fillTimer();
     this.run();
   }
+  fillTimer() {
+    const curDate = new Date();
+    const timeLeft = this.targetDate - curDate;
+    if (timeLeft <= 0) {
+      clearInterval(this.timerID);
+      console.log('Happy New Year!');
+      return;
+    }
 
+    this.daysEl.textContent = Math.floor(timeLeft / MILLISEC_DAY);
+    this.hoursEl.textContent = Math.floor(
+      (timeLeft % MILLISEC_DAY) / MILLISEC_HOUR,
+    );
+    this.minsEl.textContent = Math.floor(
+      (timeLeft % MILLISEC_HOUR) / MILLISEC_MIN,
+    );
+    this.secsEl.textContent = Math.floor((timeLeft % MILLISEC_MIN) / 1000);
+  }
   run() {
     this.timerID = setInterval(() => {
-      const curDate = new Date();
-      const timeLeft = this.targetDate - curDate;
-      if (timeLeft <= 0) {
-        clearInterval(this.timerID);
-        console.log('Happy New Year!');
-        return;
-      }
-
-      this.daysEl.textContent = Math.floor(timeLeft / MILLISEC_DAY);
-      this.hoursEl.textContent = Math.floor(
-        (timeLeft % MILLISEC_DAY) / MILLISEC_HOUR,
-      );
-      this.minsEl.textContent = Math.floor(
-        (timeLeft % MILLISEC_HOUR) / MILLISEC_MIN,
-      );
-      this.secsEl.textContent = Math.floor((timeLeft % MILLISEC_MIN) / 1000);
+      this.fillTimer();
     }, 1000);
   }
 }
